@@ -1,54 +1,84 @@
 version: "3.9"
 
-services: 
+services:
+    #postgres:
+    #    build: 
+    #        context: .
+    #        dockerfile: postgres/dockerfile.postgres
+    #    image: postgres:13.4
+    #    labels: 
+    #        author: "Houston Santos - houston_santos@hotmail.com"
+    #    container_name: postgres
+    #    environment:
+    #        POSTGRES_PASSWORD: postgres
+    #        POSTGRES_INITDB_ARGS: "--encoding=WIN1252 --locale=C --username=postgres"
+    #    restart: always
+    #    ports:
+    #        - 5432:5432
+    #    networks:
+    #        - elastic
+
     elastic:
-        image: elasticsearch:7.13.2
+        image: elasticsearch:7.14.0
+        labels:
+            author: "Houston Santos - houston_santos@hotmail.com" 
         container_name: elastic
-        environment: 
-            - discovery.type=single-node
+        environment:
+            # HTTP_HOST: "0.0.0.0"
+            # NODE_NAME: "elastic"
+            # DISCOVERY_TYPE: "single-node"
+            - http.host=0.0.0.0
             - node.name=elastic
+            - discovery.type=single-node
         ulimits: 
             memlock:
                 soft: -1
                 hard: -1
-        volumes: 
-            - data01:/usr/share/elasticsearch/data
+        #volumes: 
+        #    - data01:/usr/share/elasticsearch/data
         ports: 
-            - "9200:9200"
+            - 9200:9200
         networks: 
             - elastic
     
     kibana: 
-        image: kibana:7.13.2
+        image: kibana:7.14.0
+        labels: 
+            author: "Houston Santos - houston_santos@hotmail.com"
         container_name: kibana
-        environment: 
-            - server.name=kibana
-            - server.host=0.0.0.0
-            - elasticsearch.url=http//elastic:9200
-            - elasticsearch.hosts=http//elastic:9200
-        volumes: 
-            - data02:/usr/share/elasticsearch/data
+        environment:
+            SERVER_NAME: kibana
+            SERVER_HOST: 0.0.0.0 
+            ELASTICSEARCH_URL: http://elastic:9200
+            ELASTICSEARCH_HOSTS: '["http://elastic:9200"]'
+        depends_on: 
+            - elastic
+        #volumes: 
+        #    - data02:/usr/share/elasticsearch/data
         ports: 
-            - "5601:5601"
+            - 5601:5601
         networks: 
             - elastic
     
     logstash:
-        image: logstash:7.13.2
+        image: logstash:7.14.0
+        labels: 
+            author: "Houston Santos - houston_santos@hotmail.com"
         container_name: logstash
         environment: 
-            - XPACK.MONITORING.ELASTICSEARCH.HOSTS=http://elastic:9200
-        volumes: 
-            - data03:/usr/share/elasticsearch/data
+            XPACK.MONITORING.ELASTICSEARCH.HOSTS: http://elastic:9200
+        volumes:
+            - /Users/houston/Repositorios/Docker/ElasticStack/logstash:/mnt
+            #- data03:/usr/share/elasticsearch/data
         ports: 
-            - "5044:5044"
+            - 5044:5044
         networks: 
             - elastic
 
-volumes: 
-    data01:
-    data02:
-    data03:
+# volumes: 
+    # data01:
+    # data02:
+    # data03:
 
 networks: 
     elastic:
