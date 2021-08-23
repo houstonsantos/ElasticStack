@@ -1,1 +1,0 @@
-SELECT codigo, n_nota, r_social, c_fornec FROM fornecedor WHERE codigo > :sql_last_value ORDER BY codigo
