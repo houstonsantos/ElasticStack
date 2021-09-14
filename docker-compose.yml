@@ -11,15 +11,15 @@ services:
          - node.name=elastic
          - discovery.type=single-node
          - xpack.security.enabled=true
-         - xpack.monitoring.collection.enabled=true
+         #- xpack.monitoring.collection.enabled=true
          #- xpack.security.http.ssl.enabled=true
          #- xpack.security.transport.ssl.enabled=true
          - ELASTIC_USER=$ELASTIC_USER
          - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      ulimits: 
-         memlock:
-            soft: -1
-            hard: -1
+      #ulimits: 
+      #   memlock:
+      #      soft: -1
+      #      hard: -1
          #nofile:
          #   soft: 65536
          #   hard: 65536
@@ -69,10 +69,10 @@ services:
       container_name: logstash
       depends_on: 
          - elastic
-      environment:
-         XPACK.MONITORING.ELASTICSEARCH.USERNAME: elastic
-         XPACK.MONITORING.ELASTICSEARCH.PASSWORD: elastic
-         XPACK.MONITORING.ELASTICSEARCH.HOSTS: http://elastic:9200
+      #environment:
+         #XPACK.MONITORING.ELASTICSEARCH.USERNAME: elastic
+         #XPACK.MONITORING.ELASTICSEARCH.PASSWORD: elastic
+         #XPACK.MONITORING.ELASTICSEARCH.HOSTS: http://elastic:9200
       restart: on-failure
       volumes:
          - /Users/houston/Repositorios/Docker/ElasticStack/logstash:/mnt
@@ -82,6 +82,21 @@ services:
       networks: 
          - elastic
          - databases
+
+   metricbeat:
+      image: docker.elastic.co/beats/metricbeat:7.14.1-amd64
+      labels: 
+         author: "Houston Santos - houston_santos@hotmail.com"
+      container_name: metricbeat
+      depends_on: 
+         - logstash
+         - kibana
+      environment: 
+         - setup.kibana.host=kibana:5601
+         - output.elasticsearch.hosts=["elastic:9200"]
+      restart: on-failure
+      networks: 
+         - elastic
 
 # volumes: 
    # elastic:
