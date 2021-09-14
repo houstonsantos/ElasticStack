@@ -3,7 +3,7 @@
 Afinal, o que é o ELK Stack? "ELK" é o acrônimo para três projetos open source: Elasticsearch, Logstash e Kibana. O Elasticsearch é um mecanismo de busca e análise. O Logstash é um pipeline de processamento de dados do lado do servidor que faz a ingestão de dados a partir de inúmeras fontes simultaneamente, transforma-os e envia-os para um "esconderijo" como o Elasticsearch. O Kibana permite que os usuários visualizem dados com diagramas e gráficos no Elasticsearch.
 
 <p align="center">
-    <img width="500" height="300" src="https://miro.medium.com/max/700/0*O6aGxGkIlazsHi-p">
+    <img width="600" height="400" src="https://miro.medium.com/max/700/0*O6aGxGkIlazsHi-p">
 </p>
 
 O Elastic Stack é a próxima evolução do ELK Stack. Quer saber mais da uma olhadinha neste [Link](https://www.elastic.co/pt/what-is/elk-stack)
