@@ -14,12 +14,12 @@ services:
          #- xpack.monitoring.collection.enabled=true
          #- xpack.security.http.ssl.enabled=true
          #- xpack.security.transport.ssl.enabled=true
-         - ELASTIC_USER=$ELASTIC_USER
-         - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      #ulimits: 
-      #   memlock:
-      #      soft: -1
-      #      hard: -1
+         - ELASTIC_USER=${ELASTIC_USER}
+         - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      ulimits: 
+         memlock:
+            soft: -1
+            hard: -1
          #nofile:
          #   soft: 65536
          #   hard: 65536
@@ -81,30 +81,35 @@ services:
          - 5044:5044
       networks: 
          - elastic
-         - databases
-
-   metricbeat:
-      image: docker.elastic.co/beats/metricbeat:7.14.1-amd64
+         #- databases
+   
+   filebeat:
+      image: docker.elastic.co/beats/filebeat:7.14.1-amd64
       labels: 
          author: "Houston Santos - houston_santos@hotmail.com"
-      container_name: metricbeat
+      container_name: filebeat
       depends_on: 
-         - logstash
          - kibana
-      environment: 
+      environment:
          - setup.kibana.host=kibana:5601
-         - output.elasticsearch.hosts=["elastic:9200"]
+         - output.elasticsearch.hosts=["http://elastic:9200"]
+         - ELASTICSEARCH_HOSTS=["http://elastic:9200"]
+         - ELASTICSEARCH_USERNAME=${ELASTIC_USER}
+         - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
       restart: on-failure
+      volumes:
+         - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
       networks: 
          - elastic
 
-# volumes: 
+volumes: 
    # elastic:
    # kibana:
    # logstash:
+   filebeat:
 
 networks: 
    elastic:
       name: elastic
-   databases:
-      external: true
+   #databases:
+   #   external: true
