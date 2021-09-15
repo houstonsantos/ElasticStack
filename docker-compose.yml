@@ -88,19 +88,18 @@ services:
       labels: 
          author: "Houston Santos - houston_santos@hotmail.com"
       container_name: filebeat
-      depends_on: 
+      depends_on:
          - kibana
-      #environment:
-       #  - setup.kibana.host=kibana:5601
-        # - output.elasticsearch.hosts=["http://elastic:9200"]
-         #- ELASTICSEARCH_HOSTS=["http://elastic:9200"]
-         #- ELASTICSEARCH_USERNAME=${ELASTIC_USER}
-         #- ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+      user: root
+      command: filebeat -e -strict.perms=false
+      healthcheck:
+         test: filebeat --strict.perms=false test config
       restart: on-failure
       volumes:
-         - ./config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-         - /var/lib/docker/containers:/var/lib/docker/containers:ro
-         - /var/run/docker.sock:/var/run/docker.sock:ro
+         - C:\Users\houston.santos\Repo\ElasticStack\config\filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+         #- ./config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+         #- /var/lib/docker/containers:/var/lib/docker/containers:ro
+         #- /var/run/docker.sock:/var/run/docker.sock:ro
       networks: 
          - elastic
 

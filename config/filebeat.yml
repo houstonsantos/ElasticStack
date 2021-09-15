@@ -19,7 +19,7 @@ filebeat.modules:
 
     # Set custom paths for the log files. If left empty,
     # Filebeat will choose the paths depending on your OS.
-    #var.paths:
+    #var.paths: 
 
     # Input configuration (advanced). Any input configuration option
     # can be added under this section.
@@ -1571,7 +1571,7 @@ filebeat.modules:
 #------------------------------- NetFlow Module -------------------------------
 - module: netflow
   log:
-    enabled: false
+    enabled: true
     var:
       netflow_host: localhost
       netflow_port: 2055
@@ -2442,7 +2442,7 @@ filebeat.inputs:
 - type: log
 
   # Change to true to enable this input configuration.
-  enabled: false
+  enabled: true
 
   # Paths that should be crawled and fetched. Glob based paths.
   # To fetch all ".log" files from a specific level of subdirectories
@@ -2985,10 +2985,10 @@ filebeat.inputs:
 #------------------------------ NetFlow input --------------------------------
 # Experimental: Config options for the Netflow/IPFIX collector over UDP input
 #- type: netflow
-  #enabled: false
+  #enabled: true
 
   # Address where the NetFlow Collector will bind
-  #host: ":2055"
+  #host: "localhost:2055"
 
   # Maximum size of the message received over UDP
   #max_message_size: 10KiB
@@ -3177,7 +3177,7 @@ filebeat.config:
     #reload.enabled: true
     #reload.period: 10s
   modules:
-    enabled: true
+    enabled: false
     path: /usr/share/filebeat/modules.d/*.yml
     reload.enabled: true
     reload.period: 60s
@@ -3376,8 +3376,8 @@ filebeat.config:
 # provider about the host machine. It works on EC2, GCE, DigitalOcean,
 # Tencent Cloud, and Alibaba Cloud.
 #
-#processors:
-#  - add_cloud_metadata: ~
+processors:
+  - add_cloud_metadata: ~
 #
 # The following example enriches each event with the machine's local time zone
 # offset from UTC.
@@ -3515,7 +3515,7 @@ output.elasticsearch:
   # Scheme and port can be left out and will be set to the default (http and 9200)
   # In case you specify and additional path, the scheme is required: http://localhost:9200/path
   # IPv6 addresses should always be defined as: https://[2001:db8::1]:9200
-  hosts: ["192.168.32.2:9200"]
+  hosts: ["elastic:9200"]
 
   # Set gzip compression level.
   #compression_level: 0
@@ -3524,7 +3524,7 @@ output.elasticsearch:
   #escape_html: false
 
   # Protocol - either `http` (default) or `https`.
-  protocol: "http"
+  #protocol: "http"
 
   # Authentication credentials - either API key or username/password.
   #api_key: "id:api_key"
@@ -4219,7 +4219,7 @@ output.elasticsearch:
 # These settings control loading the sample dashboards to the Kibana index. Loading
 # the dashboards are disabled by default and can be enabled either by setting the
 # options here, or by using the `-setup` CLI flag or the `setup` command.
-#setup.dashboards.enabled: false
+setup.dashboards.enabled: true
 
 # The directory from where to read the dashboards. The default is the `kibana`
 # folder in the home path.
@@ -4251,13 +4251,13 @@ output.elasticsearch:
 
 # If true and Kibana is not reachable at the time when dashboards are loaded,
 # it will retry to reconnect to Kibana instead of exiting with an error.
-#setup.dashboards.retry.enabled: false
+setup.dashboards.retry.enabled: true
 
 # Duration interval between Kibana connection retries.
-#setup.dashboards.retry.interval: 1s
+setup.dashboards.retry.interval: 5s
 
 # Maximum number of retries before exiting with an error, 0 for unlimited retrying.
-#setup.dashboards.retry.maximum: 0
+setup.dashboards.retry.maximum: 2
 
 # ================================== Template ==================================
 
@@ -4365,10 +4365,10 @@ setup.kibana:
   # Scheme and port can be left out and will be set to the default (http and 5601)
   # In case you specify and additional path, the scheme is required: http://localhost:5601/path
   # IPv6 addresses should always be defined as: https://[2001:db8::1]:5601
-  host: "192.168.32.3:5601"
+  host: "kibana:5601"
 
   # Optional protocol and basic auth credentials.
-  protocol: "http"
+  #protocol: "https"
   username: "elastic"
   password: "elastic"
 
@@ -4466,7 +4466,7 @@ setup.kibana:
 
 # Logging to rotating files. Set logging.to_files to false to disable logging to
 # files.
-logging.to_files: false
+logging.to_files: true
 logging.files:
   # Configure the path where the logs are written. The default is the logs directory
   # under the home path (the binary location).
