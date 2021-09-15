@@ -11,7 +11,7 @@ services:
          - node.name=elastic
          - discovery.type=single-node
          - xpack.security.enabled=true
-         #- xpack.monitoring.collection.enabled=true
+         - xpack.monitoring.collection.enabled=true
          #- xpack.security.http.ssl.enabled=true
          #- xpack.security.transport.ssl.enabled=true
          - ELASTIC_USER=${ELASTIC_USER}
@@ -69,10 +69,10 @@ services:
       container_name: logstash
       depends_on: 
          - elastic
-      #environment:
-         #XPACK.MONITORING.ELASTICSEARCH.USERNAME: elastic
-         #XPACK.MONITORING.ELASTICSEARCH.PASSWORD: elastic
-         #XPACK.MONITORING.ELASTICSEARCH.HOSTS: http://elastic:9200
+      environment:
+         XPACK.MONITORING.ELASTICSEARCH.USERNAME: elastic
+         XPACK.MONITORING.ELASTICSEARCH.PASSWORD: elastic
+         XPACK.MONITORING.ELASTICSEARCH.HOSTS: http://elastic:9200
       restart: on-failure
       volumes:
          - /Users/houston/Repositorios/Docker/ElasticStack/logstash:/mnt
@@ -90,23 +90,25 @@ services:
       container_name: filebeat
       depends_on: 
          - kibana
-      environment:
-         - setup.kibana.host=kibana:5601
-         - output.elasticsearch.hosts=["http://elastic:9200"]
-         - ELASTICSEARCH_HOSTS=["http://elastic:9200"]
-         - ELASTICSEARCH_USERNAME=${ELASTIC_USER}
-         - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+      #environment:
+       #  - setup.kibana.host=kibana:5601
+        # - output.elasticsearch.hosts=["http://elastic:9200"]
+         #- ELASTICSEARCH_HOSTS=["http://elastic:9200"]
+         #- ELASTICSEARCH_USERNAME=${ELASTIC_USER}
+         #- ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
       restart: on-failure
       volumes:
-         - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+         - ./config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+         - /var/lib/docker/containers:/var/lib/docker/containers:ro
+         - /var/run/docker.sock:/var/run/docker.sock:ro
       networks: 
          - elastic
 
-volumes: 
+#volumes: 
    # elastic:
    # kibana:
    # logstash:
-   filebeat:
+   # filebeat:
 
 networks: 
    elastic:
