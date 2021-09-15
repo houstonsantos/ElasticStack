@@ -12,10 +12,10 @@
 filebeat.modules:
 
 #-------------------------------- System Module --------------------------------
-#- module: system
+- module: system
   # Syslog
-  #syslog:
-    #enabled: true
+  syslog:
+    enabled: true
 
     # Set custom paths for the log files. If left empty,
     # Filebeat will choose the paths depending on your OS.
@@ -3123,11 +3123,10 @@ filebeat.inputs:
 # Autodiscover allows you to detect changes in the system and spawn new modules
 # or inputs as they happen.
 
-filebeat.autodiscover:
+#filebeat.autodiscover:
   # List of enabled autodiscover providers
-  providers:
-    - type: docker
-      hints.enabled: true
+  #providers:
+    #- type: docker
 #      templates:
 #        - condition:
 #            equals.docker.container.image: busybox
@@ -3171,17 +3170,17 @@ filebeat.autodiscover:
 #filebeat.shutdown_timeout: 0
 
 # Enable filebeat config reloading
-#filebeat.config:
+filebeat.config:
   #inputs:
     #enabled: false
     #path: inputs.d/*.yml
     #reload.enabled: true
     #reload.period: 10s
-  #modules:
-    #enabled: false
-    #path: modules.d/*.yml
-    #reload.enabled: true
-    #reload.period: 10s
+  modules:
+    enabled: true
+    path: /usr/share/filebeat/modules.d/*.yml
+    reload.enabled: true
+    reload.period: 60s
 
 
 # ================================== General ===================================
@@ -3516,7 +3515,7 @@ output.elasticsearch:
   # Scheme and port can be left out and will be set to the default (http and 9200)
   # In case you specify and additional path, the scheme is required: http://localhost:9200/path
   # IPv6 addresses should always be defined as: https://[2001:db8::1]:9200
-  hosts: ["localhost:9200"]
+  hosts: ["192.168.32.2:9200"]
 
   # Set gzip compression level.
   #compression_level: 0
@@ -3525,12 +3524,12 @@ output.elasticsearch:
   #escape_html: false
 
   # Protocol - either `http` (default) or `https`.
-  #protocol: "https"
+  protocol: "http"
 
   # Authentication credentials - either API key or username/password.
   #api_key: "id:api_key"
-  #username: "elastic"
-  #password: "changeme"
+  username: "elastic"
+  password: "elastic"
 
   # Dictionary of HTTP parameters to pass within the URL with index operations.
   #parameters:
@@ -4366,12 +4365,12 @@ setup.kibana:
   # Scheme and port can be left out and will be set to the default (http and 5601)
   # In case you specify and additional path, the scheme is required: http://localhost:5601/path
   # IPv6 addresses should always be defined as: https://[2001:db8::1]:5601
-  #host: "localhost:5601"
+  host: "192.168.32.3:5601"
 
   # Optional protocol and basic auth credentials.
-  #protocol: "https"
-  #username: "elastic"
-  #password: "changeme"
+  protocol: "http"
+  username: "elastic"
+  password: "elastic"
 
   # Optional HTTP path
   #path: ""

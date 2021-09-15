@@ -90,23 +90,25 @@ services:
       container_name: filebeat
       depends_on: 
          - kibana
-      environment:
-         - setup.kibana.host=kibana:5601
-         - output.elasticsearch.hosts=["http://elastic:9200"]
-         - ELASTICSEARCH_HOSTS=["http://elastic:9200"]
-         - ELASTICSEARCH_USERNAME=${ELASTIC_USER}
-         - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+      #environment:
+       #  - setup.kibana.host=kibana:5601
+        # - output.elasticsearch.hosts=["http://elastic:9200"]
+         #- ELASTICSEARCH_HOSTS=["http://elastic:9200"]
+         #- ELASTICSEARCH_USERNAME=${ELASTIC_USER}
+         #- ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
       restart: on-failure
       volumes:
-         - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+         - ./config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+         - /var/lib/docker/containers:/var/lib/docker/containers:ro
+         - /var/run/docker.sock:/var/run/docker.sock:ro
       networks: 
          - elastic
 
-volumes: 
+#volumes: 
    # elastic:
    # kibana:
    # logstash:
-   filebeat:
+   # filebeat:
 
 networks: 
    elastic:
