@@ -761,7 +761,7 @@ filebeat.modules:
 #---------------------------- CylanceProtect Module ----------------------------
 - module: cylance
   protect:
-    enabled: true
+    enabled: false
 
     # Set which input to use between udp (default), tcp or file.
     # var.input: udp
@@ -1573,7 +1573,7 @@ filebeat.modules:
   log:
     enabled: true
     var:
-      netflow_host: localhost
+      netflow_host: 0.0.0.0
       netflow_port: 2055
       # internal_networks specifies which networks are considered internal or private
       # you can specify either a CIDR block or any of the special named ranges listed
@@ -3123,10 +3123,11 @@ filebeat.inputs:
 # Autodiscover allows you to detect changes in the system and spawn new modules
 # or inputs as they happen.
 
-#filebeat.autodiscover:
+filebeat.autodiscover:
   # List of enabled autodiscover providers
-  #providers:
-    #- type: docker
+  providers:
+    - type: docker
+      hints.enabled: true
 #      templates:
 #        - condition:
 #            equals.docker.container.image: busybox
@@ -4738,4 +4739,3 @@ logging.files:
 
 # This allows to enable 6.7 migration aliases
 #migration.6_to_7.enabled: false
-
