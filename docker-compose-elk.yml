@@ -70,8 +70,8 @@ services:
       depends_on: 
          - elastic
       environment:
-         XPACK.MONITORING.ELASTICSEARCH.USERNAME: elastic
-         XPACK.MONITORING.ELASTICSEARCH.PASSWORD: elastic
+         XPACK.MONITORING.ELASTICSEARCH.USERNAME: ${ELASTIC_USER}
+         XPACK.MONITORING.ELASTICSEARCH.PASSWORD: ${ELASTIC_PASSWORD}
          XPACK.MONITORING.ELASTICSEARCH.HOSTS: http://elastic:9200
       restart: on-failure
       volumes:
