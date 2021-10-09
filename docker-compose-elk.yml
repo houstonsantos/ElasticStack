@@ -28,8 +28,8 @@ services:
       healthcheck:
          test: curl -f -i -u ${ELASTIC_USER}:${ELASTIC_PASSWORD} http://localhost:9200
       restart: on-failure
-      #volumes: 
-      #  - elastic:/usr/share/elasticsearch/data
+      volumes: 
+         - elastic:/usr/share/elasticsearch/data
       ports: 
          - 9200:9200
       networks: 
@@ -55,8 +55,8 @@ services:
       healthcheck:
          test: curl -f -i http://localhost:5601/login
       restart: on-failure
-      #volumes: 
-      #    - kibana:/usr/share/kibana/data
+      volumes: 
+         - kibana:/usr/share/kibana/data
       ports: 
          - 5601:5601
       networks: 
@@ -85,10 +85,10 @@ services:
          - elastic
          - databases
 
-#volumes: 
-   # elastic:
-   # kibana:
-   # logstash:
+volumes: 
+   elastic:
+   kibana:
+   #logstash:
 
 networks: 
    elastic:
