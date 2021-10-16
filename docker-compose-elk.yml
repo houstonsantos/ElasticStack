@@ -1,11 +1,11 @@
 version: "3.9"
 
 services:
-   elastic:
-      image: elasticsearch:7.14.1
+   elasticsearch:
+      image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1-amd64
       labels:
          author: "Houston Santos - houston_santos@hotmail.com" 
-      container_name: elastic
+      container_name: elasticsearch
       environment:
          - http.host=0.0.0.0
          - node.name=elastic
@@ -29,14 +29,14 @@ services:
          test: curl -f -i -u ${ELASTIC_USER}:${ELASTIC_PASSWORD} http://localhost:9200
       restart: on-failure
       volumes: 
-         - elastic:/usr/share/elasticsearch/data
+         - elasticsearch:/usr/share/elasticsearch/data
       ports: 
          - 9200:9200
       networks: 
          - elastic
     
    kibana: 
-      image: kibana:7.14.1
+      image: docker.elastic.co/kibana/kibana:7.15.1-amd64
       labels: 
          author: "Houston Santos - houston_santos@hotmail.com"
       container_name: kibana
@@ -48,8 +48,8 @@ services:
          #SERVER_SSL_ENABLED: true 
          #XPACK_SECURITY_ENABLED: true
          #MONITORING_ENABLED: true
-         ELASTICSEARCH_URL: http://elastic:9200
-         ELASTICSEARCH_HOSTS: '["http://elastic:9200"]'
+         ELASTICSEARCH_URL: http://elasticsearch:9200
+         ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
          ELASTICSEARCH_USERNAME: ${ELASTIC_USER}
          ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD}
       healthcheck:
@@ -63,7 +63,7 @@ services:
          - elastic
     
    logstash:
-      image: logstash:7.14.1
+      image: docker.elastic.co/logstash/logstash:7.15.1-amd64
       labels: 
          author: "Houston Santos - houston_santos@hotmail.com"
       container_name: logstash
@@ -72,7 +72,7 @@ services:
       environment:
          XPACK.MONITORING.ELASTICSEARCH.USERNAME: ${ELASTIC_USER}
          XPACK.MONITORING.ELASTICSEARCH.PASSWORD: ${ELASTIC_PASSWORD}
-         XPACK.MONITORING.ELASTICSEARCH.HOSTS: http://elastic:9200
+         XPACK.MONITORING.ELASTICSEARCH.HOSTS: http://elasticsearch:9200
       restart: on-failure
       volumes:
          - ./logstash/lib:/mnt
@@ -86,7 +86,7 @@ services:
          - databases
 
 volumes: 
-   elastic:
+   elasticsearch:
    kibana:
    #logstash:
 
