@@ -87,8 +87,11 @@ services:
 
 volumes: 
    elasticsearch:
+      name: elasticsearch
    kibana:
+      name: kibana
    #logstash:
+      #name: logstash
 
 networks: 
    elastic:
