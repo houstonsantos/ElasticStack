@@ -2,7 +2,7 @@ version: "3.9"
 
 services:    
    filebeat:
-      image: docker.elastic.co/beats/filebeat:7.14.1-amd64
+      image: docker.elastic.co/beats/filebeat:7.15.1-amd64
       labels: 
          author: "Houston Santos - houston_santos@hotmail.com"
       container_name: filebeat
@@ -20,24 +20,21 @@ services:
       networks:
          - elastic
 
-   #metricbeat:
-   #   image: docker.elastic.co/beats/metricbeat:7.14.1-amd64
-   #   labels: 
-   #      author: "Houston Santos - houston_santos@hotmail.com"
-   #   container_name: metricbeat
-   #   user: root
-   #   #command: filebeat -e -strict.perms=false
-   #   #healthcheck:
-   #      #test: filebeat test config
-   #      #test: filebeat -strict.perms=false test config
-   #   restart: on-failure
-   #   #volumes:
-   #      #- ./beats/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-   #   #ports: 
-   #      #- 2055:2055/udp
-   #   networks:
-   #      - elastic
-   #      - databases
+   metricbeat:
+      image: docker.elastic.co/beats/metricbeat:7.15.1-amd64
+      labels: 
+         author: "Houston Santos - houston_santos@hotmail.com"
+      container_name: metricbeat
+      user: root
+      command: metricbeat -e -strict.perms=false
+      healthcheck:
+         test: metricbeat -strict.perms=false test config
+      restart: on-failure
+      volumes:
+         - ./beats/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
+      networks:
+         - elastic
+         - databases
 
 #volumes: 
    # filebeat:

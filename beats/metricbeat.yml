@@ -68,14 +68,14 @@ metricbeat.modules:
     - process_summary # Process summary
     - uptime          # System Uptime
     - socket_summary  # Socket summary
-    #- core           # Per CPU core usage
-    #- diskio         # Disk IO
-    #- filesystem     # File system usage for each mountpoint
+    - core           # Per CPU core usage
+    - diskio         # Disk IO
+    - filesystem     # File system usage for each mountpoint
     #- fsstat         # File system summary metrics
     #- raid           # Raid
     #- socket         # Sockets and connection info (linux only)
-    #- service        # systemd service information
-  enabled: true
+    - service        # systemd service information
+  enabled: false
   period: 10s
   processes: ['.*']
 
@@ -143,26 +143,26 @@ metricbeat.modules:
   #service.pattern_filter: ["ssh*", "nfs*"]
 
 #------------------------------- ActiveMQ Module -------------------------------
-- module: activemq
-  metricsets: ['broker', 'queue', 'topic']
-  period: 10s
-  hosts: ['localhost:8161']
-  path: '/api/jolokia/?ignoreErrors=true&canonicalNaming=false'
-  username: admin # default username
-  password: admin # default password
+#- module: activemq
+#  metricsets: ['broker', 'queue', 'topic']
+#  period: 10s
+#  hosts: ['localhost:8161']
+#  path: '/api/jolokia/?ignoreErrors=true&canonicalNaming=false'
+#  username: admin # default username
+#  password: admin # default password
 
 #------------------------------ Aerospike Module ------------------------------
-- module: aerospike
-  metricsets: ["namespace"]
-  enabled: true
-  period: 10s
-  hosts: ["localhost:3000"]
+#- module: aerospike
+#  metricsets: ["namespace"]
+#  enabled: false
+#  period: 10s
+#  hosts: ["localhost:3000"]
 
 #-------------------------------- Apache Module --------------------------------
 - module: apache
   metricsets: ["status"]
   period: 10s
-  enabled: true
+  enabled: false
 
   # Apache hosts
   hosts: ["http://127.0.0.1"]
@@ -179,78 +179,79 @@ metricbeat.modules:
 #------------------------------ App Search Module ------------------------------
 - module: appsearch
   metricsets: ["stats"]
-  enabled: true
+  enabled: false
   period: 10s
   hosts: ["http://localhost:3002"]
   #username: "elastic"
   #password: "changeme"
 
 #--------------------------------- AWS Module ---------------------------------
-- module: aws
-  period: 300s
-  credential_profile_name: test-mb
-  metricsets:
-    - ec2
-  tags_filter:
-    - key: "Organization"
-      value: "Engineering"
-- module: aws
-  period: 300s
-  credential_profile_name: test-mb
-  metricsets:
-    - sqs
-  regions:
-    - us-west-1
-- module: aws
-  period: 86400s
-  metricsets:
-    - s3_request
-    - s3_daily_storage
-  access_key_id: '${AWS_ACCESS_KEY_ID:""}'
-  secret_access_key: '${AWS_SECRET_ACCESS_KEY:""}'
-  session_token: '${AWS_SESSION_TOKEN:""}'
-- module: aws
-  period: 300s
-  credential_profile_name: test-mb
-  metricsets:
-    - cloudwatch
-  metrics:
-    - namespace: AWS/EC2
-      name: ["CPUUtilization"]
-      dimensions:
-        - name: InstanceId
-          value: i-0686946e22cf9494a
-    - namespace: AWS/EBS
-    - namespace: AWS/ELB
-      resource_type: elasticloadbalancing
-      tags:
-        - key: "Organization"
-          value: "Engineering"
-- module: aws
-  period: 60s
-  credential_profile_name: test-mb
-  tags_filter:
-    - key: "dept"
-      value: "eng"
-  metricsets:
-    - elb
-    - natgateway
-    - rds
-    - transitgateway
-    - usage
-    - vpn
+#- module: aws
+#  period: 300s
+#  credential_profile_name: test-mb
+#  metricsets:
+#    - ec2
+#  tags_filter:
+#    - key: "Organization"
+#      value: "Engineering"
+#
+#- module: aws
+#  period: 300s
+#  credential_profile_name: test-mb
+#  metricsets:
+#    - sqs
+#  regions:
+#    - us-west-1
+#- module: aws
+#  period: 86400s
+#  metricsets:
+#    - s3_request
+#    - s3_daily_storage
+#  access_key_id: '${AWS_ACCESS_KEY_ID:""}'
+#  secret_access_key: '${AWS_SECRET_ACCESS_KEY:""}'
+#  session_token: '${AWS_SESSION_TOKEN:""}'
+#- module: aws
+#  period: 300s
+#  credential_profile_name: test-mb
+#  metricsets:
+#    - cloudwatch
+#  metrics:
+#    - namespace: AWS/EC2
+#      name: ["CPUUtilization"]
+#      dimensions:
+#        - name: InstanceId
+#          value: i-0686946e22cf9494a
+#    - namespace: AWS/EBS
+#    - namespace: AWS/ELB
+#      resource_type: elasticloadbalancing
+#      tags:
+#        - key: "Organization"
+#          value: "Engineering"
+#- module: aws
+#  period: 60s
+#  credential_profile_name: test-mb
+#  tags_filter:
+#    - key: "dept"
+#      value: "eng"
+#  metricsets:
+#    - elb
+#    - natgateway
+#    - rds
+#    - transitgateway
+#    - usage
+#    - vpn
 
 #----------------------------- AWS Fargate Module -----------------------------
-- module: awsfargate
-  period: 10s
-  metricsets:
-    - task_stats
+#- module: awsfargate
+#  period: 10s
+#  metricsets:
+#    - task_stats
 
 #-------------------------------- Azure Module --------------------------------
 - module: azure
   metricsets:
   - monitor
-  enabled: true
+  enabled: false
   period: 300s
   client_id: '${AZURE_CLIENT_ID:""}'
   client_secret: '${AZURE_CLIENT_SECRET:""}'
@@ -265,7 +266,7 @@ metricbeat.modules:
 - module: azure
   metricsets:
   - compute_vm
-  enabled: true
+  enabled: false
   period: 300s
   client_id: '${AZURE_CLIENT_ID:""}'
   client_secret: '${AZURE_CLIENT_SECRET:""}'
@@ -275,7 +276,7 @@ metricbeat.modules:
 - module: azure
   metricsets:
   - compute_vm_scaleset
-  enabled: true
+  enabled: false
   period: 300s
   client_id: '${AZURE_CLIENT_ID:""}'
   client_secret: '${AZURE_CLIENT_SECRET:""}'
@@ -285,7 +286,7 @@ metricbeat.modules:
 - module: azure
   metricsets:
   - storage
-  enabled: true
+  enabled: false
   period: 300s
   client_id: '${AZURE_CLIENT_ID:""}'
   client_secret: '${AZURE_CLIENT_SECRET:""}'
@@ -295,7 +296,7 @@ metricbeat.modules:
 - module: azure
   metricsets:
   - container_instance
-  enabled: true
+  enabled: false
   period: 300s
   client_id: '${AZURE_CLIENT_ID:""}'
   client_secret: '${AZURE_CLIENT_SECRET:""}'
@@ -305,7 +306,7 @@ metricbeat.modules:
 - module: azure
   metricsets:
   - container_service
-  enabled: true
+  enabled: false
   period: 300s
   client_id: '${AZURE_CLIENT_ID:""}'
   client_secret: '${AZURE_CLIENT_SECRET:""}'
@@ -315,7 +316,7 @@ metricbeat.modules:
 - module: azure
   metricsets:
   - container_registry
-  enabled: true
+  enabled: false
   period: 300s
   client_id: '${AZURE_CLIENT_ID:""}'
   client_secret: '${AZURE_CLIENT_SECRET:""}'
@@ -325,7 +326,7 @@ metricbeat.modules:
 - module: azure
   metricsets:
   - database_account
-  enabled: true
+  enabled: false
   period: 300s
   client_id: '${AZURE_CLIENT_ID:""}'
   client_secret: '${AZURE_CLIENT_SECRET:""}'
@@ -335,7 +336,7 @@ metricbeat.modules:
 - module: azure
   metricsets:
     - billing
-  enabled: true
+  enabled: false
   period: 24h
   client_id: '${AZURE_CLIENT_ID:""}'
   client_secret: '${AZURE_CLIENT_SECRET:""}'
@@ -345,7 +346,7 @@ metricbeat.modules:
 - module: azure
   metricsets:
     - app_insights
-  enabled: true
+  enabled: false
   period: 300s
   application_id: ''
   api_key: ''
@@ -355,13 +356,14 @@ metricbeat.modules:
 - module: azure
   metricsets:
     - app_state
-  enabled: true
+  enabled: false
   period: 300s
   application_id: ''
   api_key: ''
 
 #--------------------------------- Beat Module ---------------------------------
 - module: beat
+  enabled: false
   metricsets:
     - stats
     - state
@@ -379,7 +381,7 @@ metricbeat.modules:
   metricsets: ["cluster_disk", "cluster_health", "monitor_health", "pool_disk", "osd_tree"]
   period: 10s
   hosts: ["localhost:5000"]
-  enabled: true
+  enabled: false
 
 # Metricsets depending on the Ceph Manager Daemon (default port: 8003)
 - module: ceph
@@ -393,6 +395,7 @@ metricbeat.modules:
   hosts: [ "https://localhost:8003" ]
   #username: "user"
   #password: "secret"
+  enabled: false
 
 #----------------------------- Cloudfoundry Module -----------------------------
 - module: cloudfoundry
@@ -400,7 +403,7 @@ metricbeat.modules:
     - container
     - counter
     - value
-  enabled: true
+  enabled: false
   api_address: '${CLOUDFOUNDRY_API_ADDRESS:""}'
   doppler_address: '${CLOUDFOUNDRY_DOPPLER_ADDRESS:""}'
   uaa_address: '${CLOUDFOUNDRY_UAA_ADDRESS:""}'
@@ -415,6 +418,7 @@ metricbeat.modules:
   metricsets: ['status']
   period: 10s
   hosts: ['localhost:8080']
+  enabled: false
 
   # This module uses the Prometheus collector metricset, all
   # the options for this metricset are also available here.
@@ -424,7 +428,7 @@ metricbeat.modules:
 - module: consul
   metricsets:
   - agent
-  enabled: true
+  enabled: false
   period: 10s
   hosts: ["localhost:8500"]
 
@@ -434,19 +438,21 @@ metricbeat.modules:
   metricsets: ["stats"]
   period: 10s
   hosts: ["localhost:9153"]
+  enabled: false
 
 #------------------------------ Couchbase Module ------------------------------
 - module: couchbase
   metricsets: ["bucket", "cluster", "node"]
   period: 10s
   hosts: ["localhost:8091"]
-  enabled: true
+  enabled: false
 
 #------------------------------- CouchDB Module -------------------------------
 - module: couchdb
   metricsets: ["server"]
   period: 10s
   hosts: ["localhost:5984"]
+  enabled: false
 
 #-------------------------------- Docker Module --------------------------------
 - module: docker
@@ -457,10 +463,10 @@ metricbeat.modules:
     - "event"
     - "healthcheck"
     - "info"
-    #- "image"
+    - "image"
     - "memory"
     - "network"
-    #- "network_summary"
+    - "network_summary"
   hosts: ["unix:///var/run/docker.sock"]
   period: 10s
   enabled: true
@@ -484,22 +490,22 @@ metricbeat.modules:
   hosts: ["localhost:8080"]
   metrics_path: /metrics/metrics
   namespace: example
-  enabled: true
+  enabled: false
 
 #---------------------------- Elasticsearch Module ----------------------------
 - module: elasticsearch
   metricsets:
     - node
     - node_stats
-    #- index
+    - index
     #- index_recovery
     #- index_summary
     #- shard
     #- ml_job
   period: 10s
-  hosts: ["http://localhost:9200"]
-  #username: "elastic"
-  #password: "changeme"
+  hosts: ["http://elasticsearch:9200"]
+  username: "elastic"
+  password: "elastic"
   #ssl.certificate_authorities: ["/etc/pki/root/ca.pem"]
 
   #index_recovery.active_only: true
@@ -511,70 +517,73 @@ metricbeat.modules:
   metricsets: ["server"]
   period: 10s
   hosts: ["localhost:9901"]
+  enabled: false
 
 #--------------------------------- Etcd Module ---------------------------------
 - module: etcd
   metricsets: ["leader", "self", "store"]
   period: 10s
   hosts: ["localhost:2379"]
+  enabled: false
 
 #------------------------ Google Cloud Platform Module ------------------------
-- module: gcp
-  metricsets:
-    - compute
-  region: "us-"
-  project_id: "your project id"
-  credentials_file_path: "your JSON credentials file path"
-  exclude_labels: false
-  period: 1m
-
-- module: gcp
-  metricsets:
-    - pubsub
-    - loadbalancing
-  zone: "us-central1-a"
-  region: "us-central1"
-  project_id: "your project id"
-  credentials_file_path: "your JSON credentials file path"
-  exclude_labels: false
-  period: 1m
-
-- module: gcp
-  metricsets:
-    - storage
-  project_id: "your project id"
-  credentials_file_path: "your JSON credentials file path"
-  exclude_labels: false
-  period: 5m
-
-- module: gcp
-  metricsets:
-    - metrics
-  project_id: "your project id"
-  credentials_file_path: "your JSON credentials file path"
-  exclude_labels: false
-  period: 1m
-  metrics:
-    - aligner: ALIGN_NONE
-      service: compute
-      metric_types:
-        - "instance/cpu/reserved_cores"
-        - "instance/cpu/usage_time"
-        - "instance/cpu/utilization"
-        - "instance/uptime"
-
-- module: gcp
-  metricsets:
-    - billing
-  period: 24h
-  project_id: "your project id"
-  credentials_file_path: "your JSON credentials file path"
-  dataset_id: "dataset id"
-  table_pattern: "table pattern"
-  cost_type: "regular"
+#- module: gcp
+#  metricsets:
+#    - compute
+#  region: "us-"
+#  project_id: "your project id"
+#  credentials_file_path: "your JSON credentials file path"
+#  exclude_labels: false
+#  period: 1m
+#
+#- module: gcp
+#  metricsets:
+#    - pubsub
+#    - loadbalancing
+#  zone: "us-central1-a"
+#  region: "us-central1"
+#  project_id: "your project id"
+#  credentials_file_path: "your JSON credentials file path"
+#  exclude_labels: false
+#  period: 1m
+#
+#- module: gcp
+#  metricsets:
+#    - storage
+#  project_id: "your project id"
+#  credentials_file_path: "your JSON credentials file path"
+#  exclude_labels: false
+#  period: 5m
+#
+#- module: gcp
+#  metricsets:
+#    - metrics
+#  project_id: "your project id"
+#  credentials_file_path: "your JSON credentials file path"
+#  exclude_labels: false
+#  period: 1m
+#  metrics:
+#    - aligner: ALIGN_NONE
+#      service: compute
+#      metric_types:
+#        - "instance/cpu/reserved_cores"
+#        - "instance/cpu/usage_time"
+#        - "instance/cpu/utilization"
+#        - "instance/uptime"
+#
+#- module: gcp
+#  metricsets:
+#    - billing
+#  period: 24h
+#  project_id: "your project id"
+#  credentials_file_path: "your JSON credentials file path"
+#  dataset_id: "dataset id"
+#  table_pattern: "table pattern"
+#  cost_type: "regular"
 
 #-------------------------------- Golang Module --------------------------------
 - module: golang
+  enabled: false
   #metricsets:
   #  - expvar
   #  - heap
@@ -588,7 +597,7 @@ metricbeat.modules:
 #------------------------------- Graphite Module -------------------------------
 - module: graphite
   metricsets: ["server"]
-  enabled: true
+  enabled: false
 
   # Host address to listen on. Default localhost.
   #host: localhost
@@ -622,7 +631,7 @@ metricbeat.modules:
   #hosts: ["http://127.0.0.1:14567"]
   username : "admin"
   password : "admin"
-  enabled: true
+  enabled: false
 
 #--------------------------------- HTTP Module ---------------------------------
 - module: http
@@ -640,6 +649,7 @@ metricbeat.modules:
   #response.enabled: false
   #json.is_array: false
   #dedot.enabled: false
+  enabled: false
 
 - module: http
   #metricsets:
@@ -658,6 +668,7 @@ metricbeat.modules:
   metricsets: ['qmgr']
   period: 10s
   hosts: ['localhost:9157']
+  enabled: false
 
   # This module uses the Prometheus collector metricset, all
   # the options for this metricset are also available here.
@@ -669,7 +680,7 @@ metricbeat.modules:
     - webserver
     - website
     - application_pool
-  enabled: true
+  enabled: false
   period: 10s
 
  # filter on application pool names
@@ -682,6 +693,7 @@ metricbeat.modules:
   period: 10s
   # use istio-telemetry.istio-system:42422, when deploying Metricbeat in a kubernetes cluster as Pod or Daemonset
   hosts: ["localhost:42422"]
+  enabled: false
 
 # Istio mixer. To monitor Mixer itself.
 - module: istio
@@ -689,6 +701,7 @@ metricbeat.modules:
   period: 10s
   # use istio-telemetry.istio-system:15014, when deploying Metricbeat in a kubernetes cluster as Pod or Daemonset
   hosts: ["localhost:15014"]
+  enabled: false
 
 # Istio galley. To collect all Galley-generated metrics
 - module: istio
@@ -696,6 +709,7 @@ metricbeat.modules:
   period: 10s
   # use istio-galley.istio-system:15014, when deploying Metricbeat in a kubernetes cluster as Pod or Daemonset
   hosts: ["localhost:15014"]
+  enabled: false
 
 # Istio pilot. To collect all Pilot-generated metrics.
 - module: istio
@@ -703,6 +717,7 @@ metricbeat.modules:
   period: 10s
   # use istio-pilot.istio-system:15014, when deploying Metricbeat in a kubernetes cluster as Pod or Daemonset
   hosts: ["localhost:15014"]
+  enabled: false
 
 # Istio citadel. To collect all Citadel-generated metrics.
 - module: istio
@@ -710,6 +725,7 @@ metricbeat.modules:
   period: 10s
   # use istio-pilot.istio-system:15014, when deploying Metricbeat in a kubernetes cluster as Pod or Daemonset
   hosts: ["localhost:15014"]
+  enabled: false
 
 # Istio istiod to monitor the Istio Daemon for versions after 1.5 of Istio.
 - module: istio
@@ -717,6 +733,7 @@ metricbeat.modules:
   period: 10s
   # use istiod.istio-system:15014, when deploying Metricbeat in a kubernetes cluster as Pod or Daemonset
   hosts: ['localhost:15014']
+  enabled: false
 
 # Istio proxy to monitor Envoy sidecars for versions after 1.5 of Istio.
 - module: istio
@@ -724,6 +741,7 @@ metricbeat.modules:
   period: 10s
   # it's recommended to deploy this metricset with autodiscovery, see metricset's docs for more info
   hosts: ['localhost:15090']
+  enabled: false
 
 #------------------------------- Jolokia Module -------------------------------
 - module: jolokia
@@ -731,6 +749,7 @@ metricbeat.modules:
   period: 10s
   hosts: ["localhost"]
   namespace: "metrics"
+  enabled: false
   #path: "/jolokia/?ignoreErrors=true&canonicalNaming=false"
   #username: "user"
   #password: "secret"
@@ -764,6 +783,7 @@ metricbeat.modules:
   #  - consumergroup
   period: 10s
   hosts: ["localhost:9092"]
+  enabled: false
 
   #client_id: metricbeat
   #retries: 3
@@ -818,7 +838,7 @@ metricbeat.modules:
 - module: kibana
   metricsets: ["status"]
   period: 10s
-  hosts: ["localhost:5601"]
+  hosts: ["kibana:5601"]
   basepath: ""
   enabled: true
 
@@ -836,7 +856,7 @@ metricbeat.modules:
     - system
     - volume
   period: 10s
-  enabled: true
+  enabled: false
   hosts: ["https://${NODE_NAME}:10250"]
   bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
   ssl.verification_mode: "none"
@@ -846,7 +866,7 @@ metricbeat.modules:
   #ssl.key: "/etc/pki/client/cert.key"
 
   # Enriching parameters:
-  add_metadata: true
+  add_metadata: false
   # When used outside the cluster:
   #host: node_name
   # If kube_config is not set, KUBECONFIG environment variable will be checked
@@ -855,7 +875,7 @@ metricbeat.modules:
 
 # State metrics from kube-state-metrics service:
 - module: kubernetes
-  enabled: true
+  enabled: false
   metricsets:
     - state_node
     - state_daemonset
@@ -875,7 +895,7 @@ metricbeat.modules:
   hosts: ["kube-state-metrics:8080"]
 
   # Enriching parameters:
-  add_metadata: true
+  add_metadata: false
   # When used outside the cluster:
   #host: node_name
   # If kube_config is not set, KUBECONFIG environment variable will be checked
@@ -885,7 +905,7 @@ metricbeat.modules:
 # Kubernetes API server
 # (when running metricbeat as a deployment)
 - module: kubernetes
-  enabled: true
+  enabled: false
   metricsets:
     - apiserver
   hosts: ["https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}"]
@@ -894,12 +914,10 @@ metricbeat.modules:
     - /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
   period: 30s
 
-
-
 # Kubernetes proxy server
 # (when running metricbeat locally at hosts or as a daemonset + host network)
 - module: kubernetes
-  enabled: true
+  enabled: false
   metricsets:
     - proxy
   hosts: ["localhost:10249"]
@@ -908,7 +926,7 @@ metricbeat.modules:
 # Kubernetes controller manager
 # (URL and deployment method should be adapted to match the controller manager deployment / service / endpoint)
 - module: kubernetes
-  enabled: true
+  enabled: false
   metricsets:
     - controllermanager
   hosts: ["http://localhost:10252"]
@@ -917,7 +935,7 @@ metricbeat.modules:
 # Kubernetes scheduler
 # (URL and deployment method should be adapted to match scheduler deployment / service / endpoint)
 - module: kubernetes
-  enabled: true
+  enabled: false
   metricsets:
     - scheduler
   hosts: ["localhost:10251"]
@@ -926,7 +944,7 @@ metricbeat.modules:
 #--------------------------------- KVM Module ---------------------------------
 - module: kvm
   metricsets: ["dommemstat", "status"]
-  enabled: true
+  enabled: false
   period: 10s
   hosts: ["unix:///var/run/libvirt/libvirt-sock"]
   # For remote hosts, setup network access in libvirtd.conf
@@ -945,7 +963,7 @@ metricbeat.modules:
     # - ksm
     # - conntrack
     # - iostat
-  enabled: true
+  enabled: false
   #hostfs: /hostfs
 
 
@@ -954,20 +972,20 @@ metricbeat.modules:
   metricsets: ["node", "node_stats"]
   enabled: true
   period: 10s
-  hosts: ["localhost:9600"]
+  hosts: ["logstash:9600"]
 
 #------------------------------ Memcached Module ------------------------------
 - module: memcached
   metricsets: ["stats"]
   period: 10s
   hosts: ["localhost:11211"]
-  enabled: true
+  enabled: false
 
 #------------------------------- MongoDB Module -------------------------------
 - module: mongodb
   metricsets: ["dbstats", "status", "collstats", "metrics", "replstatus"]
   period: 10s
-  enabled: true
+  enabled: false
 
   # The hosts must be passed as MongoDB URLs in the format:
   # [mongodb://][user:pass@]host[:port].
@@ -1006,12 +1024,12 @@ metricbeat.modules:
   username: domain\username
   password: verysecurepassword
   period: 10s
-
+  enabled: false
 
 #-------------------------------- Munin Module --------------------------------
 - module: munin
   metricsets: ["node"]
-  enabled: true
+  enabled: false
   period: 10s
   hosts: ["localhost:4949"]
 
@@ -1032,6 +1050,7 @@ metricbeat.modules:
   #  - performance
   #  - query
   period: 10s
+  enabled: false
 
   # Host DSN should be defined as "user:pass@tcp(127.0.0.1:3306)/"
   # or "unix(/var/lib/mysql/mysql.sock)/",
@@ -1060,6 +1079,7 @@ metricbeat.modules:
     #- "route"
   period: 10s
   hosts: ["localhost:8222"]
+  enabled: false
   #stats.metrics_path: "/varz"
   #connections.metrics_path: "/connz"
   #routes.metrics_path: "/routez"
@@ -1070,7 +1090,7 @@ metricbeat.modules:
 #-------------------------------- Nginx Module --------------------------------
 - module: nginx
   metricsets: ["stubstatus"]
-  enabled: true
+  enabled: false
   period: 10s
 
   # Nginx hosts
@@ -1084,6 +1104,7 @@ metricbeat.modules:
   metricsets: ['collector']
   period: 10s
   hosts: ['localhost:9090']
+  enabled: false
 
   # This module uses the Prometheus collector metricset, all
   # the options for this metricset are also available here.
@@ -1095,20 +1116,19 @@ metricbeat.modules:
 #-------------------------------- Oracle Module --------------------------------
 - module: oracle
   metricsets: ["tablespace", "performance"]
-  enabled: true
+  enabled: false
   period: 10s
   hosts: ["user:pass@0.0.0.0:1521/ORCLPDB1.localdomain"]
 
   # username: ""
   # password: ""
 
-
 #------------------------------- PHP_FPM Module -------------------------------
 - module: php_fpm
   metricsets:
   - pool
   #- process
-  enabled: true
+  enabled: false
   period: 10s
   status_path: "/status"
   hosts: ["localhost:8080"]
@@ -1130,22 +1150,23 @@ metricbeat.modules:
     # `pg_stats_statement` library to be configured in the server.
     #- statement
 
-  period: 10s
+  period: 30s
 
   # The host must be passed as PostgreSQL URL. Example:
   # postgres://localhost:5432?sslmode=disable
   # The available parameters are documented here:
   # https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters
-  hosts: ["postgres://localhost:5432"]
+  hosts: ["postgres://172.30.0.2:5432?sslmode=disable"]
 
   # Username to use when connecting to PostgreSQL. Empty by default.
-  #username: user
+  username: postgres
 
   # Password to use when connecting to PostgreSQL. Empty by default.
-  #password: pass
+  password: postgres
 
 #----------------------- Prometheus Typed Metrics Module -----------------------
 - module: prometheus
+  enabled: false
   period: 10s
   hosts: ["localhost:9090"]
   metrics_path: /metrics
@@ -1222,6 +1243,7 @@ metricbeat.modules:
   metricsets: ["collector"]
   hosts: ["localhost:9090"]
   metrics_path: /metrics
+  enabled: false
   #metrics_filters:
   #  include: []
   #  exclude: []
@@ -1273,7 +1295,7 @@ metricbeat.modules:
 #------------------------------- RabbitMQ Module -------------------------------
 - module: rabbitmq
   metricsets: ["node", "queue", "connection"]
-  enabled: true
+  enabled: false
   period: 10s
   hosts: ["localhost:15672"]
 
@@ -1287,7 +1309,7 @@ metricbeat.modules:
 #-------------------------------- Redis Module --------------------------------
 - module: redis
   metricsets: ["info", "keyspace"]
-  enabled: true
+  enabled: false
   period: 10s
 
   # Redis hosts
@@ -1322,6 +1344,7 @@ metricbeat.modules:
     - node
     - proxy
   period: 1m
+  enabled: false
 
   # Metrics endpoint
   hosts: ["https://127.0.0.1:8070/"]
@@ -1332,6 +1355,7 @@ metricbeat.modules:
     - query
   period: 10s
   hosts: ["user=myuser password=mypassword dbname=mydb sslmode=disable"]
+  enabled: false
 
   driver: "postgres"
   sql_query: "select now()"
@@ -1342,6 +1366,7 @@ metricbeat.modules:
   metricsets: ["stats", "channels", "subscriptions"]
   period: 60s
   hosts: ["localhost:8222"]
+  enabled: false
   #stats.metrics_path: "/streaming/serverz"
   #channels.metrics_path: "/streaming/channelsz"
   #subscriptions.metrics_path: "/streaming/channelsz" # we retrieve streaming subscriptions with a detailed query param to the channelsz endpoint
@@ -1359,23 +1384,25 @@ metricbeat.modules:
   period: 10s
   hosts: ['localhost:8080']
   path: "/jolokia/?ignoreErrors=true&canonicalNaming=false"
+  enabled: false
 
 #------------------------------- Traefik Module -------------------------------
 - module: traefik
   metricsets: ["health"]
   period: 10s
   hosts: ["localhost:8080"]
+  enabled: false
 
 #-------------------------------- UWSGI Module --------------------------------
 - module: uwsgi
   metricsets: ["status"]
-  enable: true
+  enable: false
   period: 10s
   hosts: ["tcp://127.0.0.1:9191"]
 
 #------------------------------- VSphere Module -------------------------------
 - module: vsphere
-  enabled: true
+  enabled: false
   metricsets: ["datastore", "host", "virtualmachine"]
   period: 10s
   hosts: ["https://localhost/sdk"]
@@ -1390,7 +1417,7 @@ metricbeat.modules:
 #------------------------------- Windows Module -------------------------------
 - module: windows
   metricsets: ["perfmon"]
-  enabled: true
+  enabled: false
   period: 10s
   perfmon.ignore_non_existent_counters: false
   perfmon.group_measurements_by_instance: false
@@ -1405,18 +1432,15 @@ metricbeat.modules:
 
 - module: windows
   metricsets: ["service"]
-  enabled: true
+  enabled: false
   period: 60s
 
 #------------------------------ ZooKeeper Module ------------------------------
 - module: zookeeper
-  enabled: true
+  enabled: false
   metricsets: ["mntr", "server"]
   period: 10s
   hosts: ["localhost:2181"]
-
-
-
 
 # ================================== General ===================================
 
@@ -1750,7 +1774,7 @@ output.elasticsearch:
   # Scheme and port can be left out and will be set to the default (http and 9200)
   # In case you specify and additional path, the scheme is required: http://localhost:9200/path
   # IPv6 addresses should always be defined as: https://[2001:db8::1]:9200
-  hosts: ["localhost:9200"]
+  hosts: ["elasticsearch:9200"]
 
   # Set gzip compression level.
   #compression_level: 0
@@ -1763,8 +1787,8 @@ output.elasticsearch:
 
   # Authentication credentials - either API key or username/password.
   #api_key: "id:api_key"
-  #username: "elastic"
-  #password: "changeme"
+  username: "elastic"
+  password: "elastic"
 
   # Dictionary of HTTP parameters to pass within the URL with index operations.
   #parameters:
@@ -2454,7 +2478,7 @@ output.elasticsearch:
 # These settings control loading the sample dashboards to the Kibana index. Loading
 # the dashboards are disabled by default and can be enabled either by setting the
 # options here, or by using the `-setup` CLI flag or the `setup` command.
-#setup.dashboards.enabled: false
+setup.dashboards.enabled: true
 
 # The directory from where to read the dashboards. The default is the `kibana`
 # folder in the home path.
@@ -2486,13 +2510,13 @@ output.elasticsearch:
 
 # If true and Kibana is not reachable at the time when dashboards are loaded,
 # it will retry to reconnect to Kibana instead of exiting with an error.
-#setup.dashboards.retry.enabled: false
+setup.dashboards.retry.enabled: true
 
 # Duration interval between Kibana connection retries.
-#setup.dashboards.retry.interval: 1s
+setup.dashboards.retry.interval: 5s
 
 # Maximum number of retries before exiting with an error, 0 for unlimited retrying.
-#setup.dashboards.retry.maximum: 0
+setup.dashboards.retry.maximum: 2
 
 # ================================== Template ==================================
 
@@ -2600,12 +2624,12 @@ setup.kibana:
   # Scheme and port can be left out and will be set to the default (http and 5601)
   # In case you specify and additional path, the scheme is required: http://localhost:5601/path
   # IPv6 addresses should always be defined as: https://[2001:db8::1]:5601
-  #host: "localhost:5601"
+  host: "kibana:5601"
 
   # Optional protocol and basic auth credentials.
   #protocol: "https"
-  #username: "elastic"
-  #password: "changeme"
+  username: "elastic"
+  password: "elastic"
 
   # Optional HTTP path
   #path: ""
@@ -2751,7 +2775,7 @@ logging.files:
 # reporting is disabled by default.
 
 # Set to true to enable the monitoring reporter.
-#monitoring.enabled: false
+monitoring.enabled: true
 
 # Sets the UUID of the Elasticsearch cluster under which monitoring data for this
 # Metricbeat instance will appear in the Stack Monitoring UI. If output.elasticsearch
@@ -2765,13 +2789,13 @@ logging.files:
 # output configuration, so if you have the Elasticsearch output configured such
 # that it is pointing to your Elasticsearch monitoring cluster, you can simply
 # uncomment the following line.
-#monitoring.elasticsearch:
+monitoring.elasticsearch:
 
   # Array of hosts to connect to.
   # Scheme and port can be left out and will be set to the default (http and 9200)
   # In case you specify and additional path, the scheme is required: http://localhost:9200/path
   # IPv6 addresses should always be defined as: https://[2001:db8::1]:9200
-  #hosts: ["localhost:9200"]
+  hosts: ["elasticsearch:9200"]
 
   # Set gzip compression level.
   #compression_level: 0
@@ -2781,8 +2805,8 @@ logging.files:
 
   # Authentication credentials - either API key or username/password.
   #api_key: "id:api_key"
-  #username: "beats_system"
-  #password: "changeme"
+  username: "elastic"
+  password: "elastic"
 
   # Dictionary of HTTP parameters to pass within the URL with index operations.
   #parameters:
@@ -2791,7 +2815,7 @@ logging.files:
 
   # Custom HTTP headers to add to each request
   #headers:
-  #  X-My-Header: Contents of the header
+  # X-My-Header: Contents of the header
 
   # Proxy server url
   #proxy_url: http://proxy:3128
