@@ -32,6 +32,8 @@ services:
       restart: on-failure
       volumes:
          - ./beats/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
+         - /var/lib/docker/containers:/var/lib/docker/containers:ro
+         - /var/run/docker.sock:/var/run/docker.sock:ro
       networks:
          - elastic
          - databases
