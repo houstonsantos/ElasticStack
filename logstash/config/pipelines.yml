@@ -3,10 +3,10 @@
 # https://www.elastic.co/guide/en/logstash/current/multiple-pipelines.html
 
 - pipeline.id: main
-  path.config: "/usr/share/logstash/pipeline"
+  path.config: "/usr/share/logstash/pipeline/logstash.conf"
 
 #- pipeline.id: netflow
 #  path.config: "/usr/share/logstash/pipeline/netflow.conf"
 
 #- pipeline.id: protheus
-#  path.config: "/usr/share/logstash/pipeline/protheus.conf"
+#  path.config: "/usr/share/logstash/pipeline/protheus/protheus.conf"

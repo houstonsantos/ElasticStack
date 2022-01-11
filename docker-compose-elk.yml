@@ -40,8 +40,6 @@ services:
       labels: 
          author: "Houston Santos - houston_santos@hotmail.com"
       container_name: kibana
-      depends_on: 
-         - elasticsearch
       environment:
          SERVER_NAME: kibana
          SERVER_HOST: 0.0.0.0
@@ -52,6 +50,9 @@ services:
          ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
          ELASTICSEARCH_USERNAME: ${ELASTIC_USER}
          ELASTICSEARCH_PASSWORD: ${ELASTIC_PASSWORD}
+      depends_on: 
+         elasticsearch:
+            condition: service_started
       healthcheck:
          test: curl -f -i http://localhost:5601/login
       restart: on-failure
@@ -67,12 +68,13 @@ services:
       labels: 
          author: "Houston Santos - houston_santos@hotmail.com"
       container_name: logstash
-      depends_on: 
-         - elasticsearch
       #environment:
          #XPACK.MONITORING.ELASTICSEARCH.USERNAME: ${ELASTIC_USER}
          #XPACK.MONITORING.ELASTICSEARCH.PASSWORD: ${ELASTIC_PASSWORD}
          #XPACK.MONITORING.ELASTICSEARCH.HOSTS: http://elasticsearch:9200
+      depends_on:
+         kibana:
+            condition: service_started
       restart: on-failure
       volumes:
          - ./logstash/lib:/mnt
