@@ -5,8 +5,8 @@
 - pipeline.id: main
   path.config: "/usr/share/logstash/pipeline/logstash.conf"
 
-#- pipeline.id: netflow
-#  path.config: "/usr/share/logstash/pipeline/netflow.conf"
+- pipeline.id: netflow
+  path.config: "/usr/share/logstash/pipeline/netflow.conf"
 
-#- pipeline.id: protheus
-#  path.config: "/usr/share/logstash/pipeline/protheus/protheus.conf"
+- pipeline.id: protheus
+  path.config: "/usr/share/logstash/pipeline/protheus/protheus.conf"
