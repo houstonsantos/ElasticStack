@@ -94,14 +94,15 @@ docker exec -it elasticsearch /usr/share/elasticsearch/bin/elasticsearch-create-
 ```
 Cópie o token gerado, acesso o kibana http://localhost:5601 cole o token e confirme, depois o kibana vai solicitar um código de 6 dígitos, ele vai estar na sua saída do terminal, nos logs do kibana no docker.  
 
+<p align="center">
+    <img width="800" height="500" src="img/elastic.gif">
+</p>
+
 Build do arquivo docker-compose.beats.yml, agora teremos a pilha resposável pelos Beats.
 ```
 # Note que a opção <-p beats> referesse ao nome do projeto que estou diferenciando do original que seria elasticsatck, com isso você tera duas pilhas sendo executadas no Docker.
 docker compose -f docker-compose-beats.yml -p beats up -d
 ```
-<p align="center">
-    <img width="800" height="500" src="img/elastic.gif">
-</p>
 
 ## 5. Resultado do projeto
 >Duas pilhas uma executando o ELK e outras executando os Betas!
