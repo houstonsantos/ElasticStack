@@ -56,7 +56,7 @@ services:
       restart: on-failure
       volumes:
          - logstash:/usr/share/logstash/data
-      #   - ./logstash/lib:/mnt
+         - ./logstash/lib:/mnt
       #   - ./logstash/pipeline:/usr/share/logstash/pipeline
       #   - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
          - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
