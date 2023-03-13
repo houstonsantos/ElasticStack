@@ -8,20 +8,20 @@ services:
       container_name: elasticsearch
       environment:
          - TZ=${TIMEZONE}
-         #- http.host=0.0.0.0
+         - http.host=0.0.0.0
          - node.name=elastic
          - cluster.name=${CLUSTER_NAME}
          - discovery.type=single-node
          - xpack.security.enabled=false
          - xpack.monitoring.collection.enabled=true
-         - ELASTIC_USER=${ELASTIC_USER}
+         #- ELASTIC_USER=${ELASTIC_USER}
          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
          #- KIBANA_PASSWORD=${KIBANA_PASSWORD}
-      healthcheck:
-         test: curl --cacert /usr/share/elasticsearch/config/certs/http_ca.crt -u ${ELASTIC_USER}:${ELASTIC_PASSWORD} https://localhost:9200
-         interval: 5s
-         timeout: 10s
-         retries: 10
+      #healthcheck:
+      #   test: curl --cacert /usr/share/elasticsearch/config/certs/http_ca.crt -u ${ELASTIC_USER}:${ELASTIC_PASSWORD} https://localhost:9200
+      #   interval: 5s
+      #   timeout: 10s
+      #   retries: 10
       ulimits:
          memlock:
             soft: -1
@@ -35,29 +35,36 @@ services:
       networks: 
          - elastic
 
-   #logstash:
-   #   image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
-   #   labels: 
-   #      author: "Houston Santos - houston_santos@hotmail.com"
-   #   container_name: logstash
-   #   environment:
-   #      - TZ=${TIMEZONE}
-   #   depends_on:
-   #      elasticsearch:
-   #         #condition: service_healthy
-   #         condition: service_started
-   #   restart: on-failure
-   #   volumes:
-   #      - logstash:/usr/share/logstash/data
-   #   #   - ./logstash/lib:/mnt
-   #   #   - ./logstash/pipeline:/usr/share/logstash/pipeline
-   #   #   - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
-   #      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-   #   ports:
-   #      - 5044:5044
-   #      - 2055:2055/udp
-   #   networks: 
-   #      - elastic
+   logstash:
+      image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
+      labels: 
+         author: "Houston Santos - houston_santos@hotmail.com"
+      container_name: logstash
+      environment:
+         - TZ=${TIMEZONE}
+      command: 
+         -  bash 
+         -  -c 
+         -  |
+            until echo 2>/dev/null > /dev/tcp/elasticsearch/9200; do echo -e "\033[0;37;46m Host $$(uname -n) aguardando Elasticsearch...\033[0m"; sleep 0.5; done
+            /usr/local/bin/docker-entrypoint &
+            sleep infinity
+      depends_on:
+         elasticsearch:
+            #condition: service_healthy
+            condition: service_started
+      restart: on-failure
+      volumes:
+         - logstash:/usr/share/logstash/data
+      #   - ./logstash/lib:/mnt
+      #   - ./logstash/pipeline:/usr/share/logstash/pipeline
+      #   - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+         - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      ports:
+         - 5044:5044
+         - 2055:2055/udp
+      networks: 
+         - elastic
 
    kibana: 
       image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
@@ -70,8 +77,15 @@ services:
          - server.hosts=0.0.0.0
          - elasticsearch.url=http://elasticsearch:9200
          - elasticsearch.hosts=http://elasticsearch:9200
-         - elasticsearch.username=kiabana_system
-         - elasticsearch.password=${KIBANA_PASSWORD}
+         #- elasticsearch.username=kiabana_system
+         #- elasticsearch.password=${KIBANA_PASSWORD}
+      command: 
+         -  bash 
+         -  -c 
+         -  |
+            until echo 2>/dev/null > /dev/tcp/elasticsearch/9200; do echo -e "\033[0;37;45m Host $$(uname -n) aguardando Elasticsearch...\033[0m"; sleep 0.5; done
+            /usr/local/bin/kibana-docker &
+            sleep infinity
       depends_on: 
          elasticsearch:
             #condition: service_healthy
