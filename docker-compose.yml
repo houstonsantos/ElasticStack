@@ -2,21 +2,21 @@ version: "3.9"
 
 services:
    elasticsearch:
-      image: docker.elastic.co/elasticsearch/elasticsearch:8.3.3-amd64
+      image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
       labels:
          author: "Houston Santos - houston_santos@hotmail.com" 
       container_name: elasticsearch
       environment:
          - TZ=${TIMEZONE}
-         - http.host=0.0.0.0
+         #- http.host=0.0.0.0
          - node.name=elastic
          - cluster.name=${CLUSTER_NAME}
          - discovery.type=single-node
-         #- xpack.security.enabled=false
+         - xpack.security.enabled=false
          - xpack.monitoring.collection.enabled=true
          - ELASTIC_USER=${ELASTIC_USER}
          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-         - KIBANA_PASSWORD=${KIBANA_PASSWORD}
+         #- KIBANA_PASSWORD=${KIBANA_PASSWORD}
       healthcheck:
          test: curl --cacert /usr/share/elasticsearch/config/certs/http_ca.crt -u ${ELASTIC_USER}:${ELASTIC_PASSWORD} https://localhost:9200
          interval: 5s
@@ -35,8 +35,32 @@ services:
       networks: 
          - elastic
 
+   #logstash:
+   #   image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
+   #   labels: 
+   #      author: "Houston Santos - houston_santos@hotmail.com"
+   #   container_name: logstash
+   #   environment:
+   #      - TZ=${TIMEZONE}
+   #   depends_on:
+   #      elasticsearch:
+   #         #condition: service_healthy
+   #         condition: service_started
+   #   restart: on-failure
+   #   volumes:
+   #      - logstash:/usr/share/logstash/data
+   #   #   - ./logstash/lib:/mnt
+   #   #   - ./logstash/pipeline:/usr/share/logstash/pipeline
+   #   #   - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+   #      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+   #   ports:
+   #      - 5044:5044
+   #      - 2055:2055/udp
+   #   networks: 
+   #      - elastic
+
    kibana: 
-      image: docker.elastic.co/kibana/kibana:8.3.3-amd64
+      image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
       labels: 
          author: "Houston Santos - houston_santos@hotmail.com"
       container_name: kibana
@@ -44,19 +68,19 @@ services:
          - TZ=${TIMEZONE}
          - servername=kibana
          - server.hosts=0.0.0.0
-         - elasticsearch.url=https://elasticsearch:9200
-         - elasticsearch.hosts=https://elasticsearch:9200
+         - elasticsearch.url=http://elasticsearch:9200
+         - elasticsearch.hosts=http://elasticsearch:9200
          - elasticsearch.username=kiabana_system
          - elasticsearch.password=${KIBANA_PASSWORD}
       depends_on: 
          elasticsearch:
-            #condition: service_started
-            condition: service_healthy
-      healthcheck:
-         test: curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found
-         interval: 5s
-         timeout: 10s
-         retries: 10
+            #condition: service_healthy
+            condition: service_started
+      #healthcheck:
+      #   test: curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found
+      #   interval: 5s
+      #   timeout: 10s
+      #   retries: 10
       restart: on-failure
       volumes: 
          - kibana:/usr/share/kibana/data
@@ -64,31 +88,6 @@ services:
          - 5601:5601
       networks: 
          - elastic
-    
-   logstash:
-      image: docker.elastic.co/logstash/logstash:8.3.3-amd64
-      labels: 
-         author: "Houston Santos - houston_santos@hotmail.com"
-      container_name: logstash
-      environment:
-         - TZ=${TIMEZONE}
-      depends_on:
-         elasticsearch:
-            #condition: service_started
-            condition: service_healthy
-      restart: on-failure
-      volumes:
-         - logstash:/usr/share/logstash/data
-         - ./logstash/lib:/mnt
-         - ./logstash/pipeline:/usr/share/logstash/pipeline
-         - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
-         - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-      ports:
-         - 5044:5044
-         - 2055:2055/udp
-      networks: 
-         - elastic
-         - databases
 
 volumes: 
    elasticsearch:
@@ -101,5 +100,5 @@ volumes:
 networks: 
    elastic:
       name: elastic
-   databases:
-      external: true
+   #databases:
+   #   external: true
