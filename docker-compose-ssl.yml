@@ -1,17 +1,69 @@
 version: "3.9"
 
 services:
+   #certs:
+   #   image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+   #   labels:
+   #      author: "Houston Santos - houston_santos@hotmail.com" 
+   #   container_name: certs
+   #   healthcheck:
+   #      test: [ "CMD-SHELL", "[ -f config/certs/elasticsearch/elasticsearch.crt ]" ]
+   #      interval: 1s
+   #      timeout: 5s
+   #      retries: 120
+   #   user: "0"
+   #   command: >
+   #      bash -c '
+   #         if [ x${ELASTIC_PASSWORD} == x ]; then
+   #            echo "Set the ELASTIC_PASSWORD environment variable in the .env file";
+   #            exit 1;
+   #         elif [ x${KIBANA_PASSWORD} == x ]; then
+   #            echo "Set the KIBANA_PASSWORD environment variable in the .env file";
+   #            exit 1;
+   #         fi;
+   #         if [ ! -f config/certs/ca.zip ]; then
+   #            echo "Creating CA";
+   #            bin/elasticsearch-certutil ca --silent --pem -out config/certs/ca.zip;
+   #            unzip config/certs/ca.zip -d config/certs;
+   #         fi;
+   #         if [ ! -f config/certs/certs.zip ]; then
+   #            echo "Creating certs";
+   #            echo -ne \
+   #            "instances:\n"\
+   #            "  - name: elasticsearch\n"\
+   #            "    dns:\n"\
+   #            "      - elasticsearch\n"\
+   #            "      - localhost\n"\
+   #            "    ip:\n"\
+   #            "      - 127.0.0.1\n"\
+   #            > config/certs/instances.yml;
+   #            bin/elasticsearch-certutil cert --silent --pem -out config/certs/certs.zip --in config/certs/instances.yml --ca-cert config/certs/ca/ca.crt --ca-key config/certs/ca/ca.key;
+   #            unzip config/certs/certs.zip -d config/certs;
+   #         fi;
+   #         echo "Setting file permissions"
+   #         chown -R root:root config/certs;
+   #         find . -type d -exec chmod 750 \{\} \;;
+   #         find . -type f -exec chmod 640 \{\} \;;
+   #         echo "Waiting for Elasticsearch availability";
+   #         until curl -s --cacert config/certs/ca/ca.crt https://elasticsearch:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
+   #         echo "Setting kibana_system password";
+   #         until curl -s -X POST --cacert config/certs/ca/ca.crt -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" https://elasticsearch:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
+   #         echo "All done!";
+   #      '
+   #   volumes:
+   #      - certs:/usr/share/elasticsearch/config/certs
+
    elasticsearch:
       image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
       labels:
          author: "Houston Santos - houston_santos@hotmail.com" 
       container_name: elasticsearch
       restart: on-failure
-      healthcheck:
-         test: curl -u ${ELASTIC_USERNAME}:${ELASTIC_PASSWORD} http://localhost:9200
-         interval: 10s
-         timeout: 5s
-         retries: 2
+      #healthcheck:
+      #   test: curl --cacert /usr/share/elasticsearch/config/certs/http_ca.crt -u ${ELASTIC_USERNAME}:${ELASTIC_PASSWORD} https://localhost:9200
+      #   interval: 5s
+      #   timeout: 10s
+      #   retries: 10
       ulimits:
          memlock:
             soft: -1
@@ -26,9 +78,10 @@ services:
          - xpack.monitoring.collection.enabled=true
          - ELASTIC_USERNAME=${ELASTIC_USERNAME}
          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-         #- KIBANA_PASSWORD=${KIBANA_PASSWORD}
+         - KIBANA_PASSWORD=${KIBANA_PASSWORD}
       volumes: 
          - elasticsearch:/usr/share/elasticsearch/data
+         #- certs:/usr/share/elasticsearch/config/certs
       ports: 
          - 9200:9200
          - 9300:9300
@@ -43,8 +96,8 @@ services:
       restart: on-failure
       depends_on:
          elasticsearch:
-            #condition: service_healthy
             condition: service_started
+            #condition: service_healthy
       environment:
          - TZ=${TIMEZONE}
          - ELASTIC_USERNAME=${ELASTIC_USERNAME}
@@ -63,11 +116,10 @@ services:
       #   - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
          - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       ports:
-         #- 2055:2055/udp
          - 5044:5044
+         - 2055:2055/udp
       networks: 
          - elastic
-         - databases
 
    kibana: 
       image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
@@ -79,19 +131,19 @@ services:
       #   test: curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found
       #   interval: 5s
       #   timeout: 10s
-      #   retries: 5
+      #   retries: 10
       depends_on: 
          elasticsearch:
-            #condition: service_healthy
             condition: service_started
+            #condition: service_healthy
       environment:
          - TZ=${TIMEZONE}
          - servername=kibana
          - server.hosts=0.0.0.0
          - elasticsearch.url=http://elasticsearch:9200
          - elasticsearch.hosts=http://elasticsearch:9200
-         #- elasticsearch.username=kiabana_system
-         #- elasticsearch.password=${KIBANA_PASSWORD}
+         - elasticsearch.username=kiabana_system
+         - elasticsearch.password=${KIBANA_PASSWORD}
       command: 
          -  bash 
          -  -c 
@@ -101,6 +153,7 @@ services:
             sleep infinity
       volumes: 
          - kibana:/usr/share/kibana/data
+         #- certs:/usr/share/elasticsearch/config/certs
       ports: 
          - 5601:5601
       networks: 
@@ -113,9 +166,9 @@ volumes:
       name: kibana
    logstash:
       name: logstash
+   #certs:
+   #   name: certs
 
 networks: 
    elastic:
       name: elastic
-   databases:
-      external: true

@@ -1,41 +1,44 @@
 version: "3.9"
 
 services:    
-   #filebeat:
-   #   image: docker.elastic.co/beats/filebeat:${STACK_VERSION}
-   #   labels: 
-   #      author: "Houston Santos - houston_santos@hotmail.com"
-   #   container_name: filebeat
-   #   restart: on-failure
-   #   environment:
-   #     - TZ=${TIMEZONE}
-   #   user: root
-   #   command: filebeat -e -strict.perms=false
-   #   healthcheck:
-   #      test: filebeat -strict.perms=false test config
-   #   restart: on-failure
-   #   volumes:
-   #      - ./beats/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-   #      - /var/lib/docker/containers:/var/lib/docker/containers:ro
-   #      - /var/run/docker.sock:/var/run/docker.sock:ro
-   #   ports: 
-   #      - 2055:2055/udp
-   #   networks:
-   #      - elastic
+   filebeat:
+      image: docker.elastic.co/beats/filebeat:${STACK_VERSION}
+      labels: 
+         author: "Houston Santos - houston_santos@hotmail.com"
+      container_name: filebeat
+      restart: on-failure
+      healthcheck:
+         test: filebeat -strict.perms=false test config
+      environment:
+         TZ: ${TIMEZONE}
+         ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+         ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      user: root
+      command: filebeat -e -strict.perms=false
+      volumes:
+         - ./beats/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+         - /var/lib/docker/containers:/var/lib/docker/containers:ro
+         - /var/run/docker.sock:/var/run/docker.sock:ro
+         - postgres:/var/log
+      ports: 
+         - 2055:2055/udp
+      networks:
+         - elastic
 
    metricbeat:
       image: docker.elastic.co/beats/metricbeat:${STACK_VERSION}
       labels: 
          author: "Houston Santos - houston_santos@hotmail.com"
       container_name: metricbeat
-      #privileged: true
       restart: on-failure
-      environment:
-         - TZ=${TIMEZONE}
-      user: root
-      command: metricbeat -e -strict.perms=false
       healthcheck:
          test: metricbeat -strict.perms=false test config
+      environment:
+         TZ: ${TIMEZONE}
+         ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+         ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      user: root
+      command: metricbeat -e -strict.perms=false
       volumes:
          - ./beats/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
          - /var/lib/docker/containers:/var/lib/docker/containers:ro
@@ -44,8 +47,9 @@ services:
          - elastic
          - databases
 
-#volumes: 
-   # filebeat:
+volumes:
+   postgres:
+      external: true
 
 networks: 
    elastic:
