@@ -24,7 +24,7 @@ services:
          - discovery.type=single-node
          - xpack.security.enabled=false
          - xpack.monitoring.collection.enabled=true
-         - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+         #- ELASTIC_USERNAME=${ELASTIC_USERNAME}
          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
          #- KIBANA_PASSWORD=${KIBANA_PASSWORD}
       volumes: 
@@ -43,7 +43,6 @@ services:
       restart: on-failure
       depends_on:
          elasticsearch:
-            #condition: service_healthy
             condition: service_started
       environment:
          - TZ=${TIMEZONE}
@@ -59,11 +58,11 @@ services:
       volumes:
          - logstash:/usr/share/logstash/data
          - ./logstash/lib:/mnt
-      #   - ./logstash/pipeline:/usr/share/logstash/pipeline
-      #   - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+         - ./logstash/pipeline:/usr/share/logstash/pipeline
+         - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
          - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       ports:
-         #- 2055:2055/udp
+         - 2055:2055/udp
          - 5044:5044
       networks: 
          - elastic
@@ -75,14 +74,13 @@ services:
          author: "Houston Santos - houston_santos@hotmail.com"
       container_name: kibana
       restart: on-failure
-      #healthcheck:
-      #   test: curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found
-      #   interval: 5s
-      #   timeout: 10s
-      #   retries: 5
+      healthcheck:
+         test: curl -s -i http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'
+         interval: 10s
+         timeout: 5s
+         retries: 2
       depends_on: 
          elasticsearch:
-            #condition: service_healthy
             condition: service_started
       environment:
          - TZ=${TIMEZONE}
