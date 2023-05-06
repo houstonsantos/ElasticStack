@@ -24,9 +24,7 @@ services:
          - discovery.type=single-node
          - xpack.security.enabled=false
          - xpack.monitoring.collection.enabled=true
-         #- ELASTIC_USERNAME=${ELASTIC_USERNAME}
          - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-         #- KIBANA_PASSWORD=${KIBANA_PASSWORD}
       volumes: 
          - elasticsearch:/usr/share/elasticsearch/data
       ports: 
@@ -58,11 +56,11 @@ services:
       volumes:
          - logstash:/usr/share/logstash/data
          - ./logstash/lib:/mnt
-         - ./logstash/pipeline:/usr/share/logstash/pipeline
-         - ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+         #- ./logstash/pipeline:/usr/share/logstash/pipeline
+         #- ./logstash/config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
          - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
       ports:
-         - 2055:2055/udp
+         #- 2055:2055/udp
          - 5044:5044
       networks: 
          - elastic
@@ -88,8 +86,6 @@ services:
          - server.hosts=0.0.0.0
          - elasticsearch.url=http://elasticsearch:9200
          - elasticsearch.hosts=http://elasticsearch:9200
-         #- elasticsearch.username=kiabana_system
-         #- elasticsearch.password=${KIBANA_PASSWORD}
       command: 
          -  bash 
          -  -c 
