@@ -26,7 +26,8 @@ O Elastic Stack é a próxima evolução do ELK Stack. Quer saber mais da uma ol
   * Kibana
   * Elasticsearch (single node)
   * Logstash
-  * Bets
+  * Metricbeat
+  * Filebeat
 
 >A ideia é aborda recursos nativos da solução da Elastic. Podendo assim servir como ponto de partida para outros projetos dos mais diversos.
 
@@ -39,6 +40,7 @@ Com o Docker e Compose já instalados clone o repositório, o mesmo deve ter a s
 │   ├── filebeat.yml
 │   └── metricbeat.yml
 ├── docker-compose-beats.yml
+├── docker-compose-ssl.yml
 ├── docker-compose.yml
 ├── img
 │   ├── docker.png
@@ -49,21 +51,25 @@ Com o Docker e Compose já instalados clone o repositório, o mesmo deve ter a s
     │   └── pipelines.yml
     └── pipeline
         ├── logstash.conf
-        └── netflow.conf
+        └── netflow.conf 
 ```
 
 ### Variáveis de ambiente
 Configuração do arquivo .env:
->Neste arquivo você deve informa usuário e senha para o elastic. Note que tenho uma seção para o Kibana e Logstash, na medida que você for customisando seu projeto, para uma melhor organização você deve utilizá-las.
+>Neste arquivo você deve informa usuário e senha para o elastic. Note que tenho uma seção para o Kibana e Elasticsearch, na medida que você for customisando seu projeto, para uma melhor organização você deve utilizá-las.
 ```
-# ElasticSearch
-ELASTIC_USER=elastic
+# Elasticsearch
+ELASTIC_USERNAME=elastic
 ELASTIC_PASSWORD=elastic
-CLUSTER_NAME=houston_santos
+CLUSTER_NAME=elasticsearch
+STACK_VERSION=8.7.1-amd64
 
 # Kibana
 KIBANA_PASSWORD=elastic
 MEM_LIMIT=1073741824
+
+# Time Zone
+TIMEZONE=America/Recife
 ```
 
 ## 2. Estrutura do projeto
@@ -77,40 +83,28 @@ Atualmente o projeto tem os beats, filebeat e metribeat com os seguintes módulo
 * **filebeat**
   * netflow
   * system
+  * postgres
   * docker
 * **metricbeat**
   * postgresql
+  * docker
 
 >AVISO: Existem várias maneiras de se configurar os Beats, para este projeto faço uso exclusivamente dos arquivos filebeats.yml e metricbeat.yml nele é possível estar habilitando e configurando os móduos, sem a necessidade de qualquer outra configuração ou interação via CLI.
 
 ## 4. Build do projeto
-Build do arquivo docker-compose.yml, com ele você vai subir a pilha com Elasticsearch, Kibana e Logstash.
+Build do arquivo docker-compose.yml, com ele você vai subir uma pilha com Elasticsearch, Kibana e Logstash.
 ```
 docker compose docker-compose.yml up -d
 ```
-Após o build você deve esxecutar o seguinte comando para gerar um token para o kibana. 
+Após o build da pilha do ELK vamos subir a pilha dos Beats. 
 ```
-docker exec -it elasticsearch /usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
-```
-Cópie o token gerado, acesso o kibana http://localhost:5601 cole o token e confirme, depois o kibana vai solicitar um código de 6 dígitos, ele vai estar na sua saída do terminal, nos logs do kibana no docker.  
-
-<p align="center">
-    <img width="800" height="500" src="img/elastic.gif">
-</p>
-
-Build do arquivo docker-compose.beats.yml, agora teremos a pilha resposável pelos Beats.
-```
-# Note que a opção <-p beats> referesse ao nome do projeto que estou diferenciando do original que seria elasticsatck, com isso você tera duas pilhas sendo executadas no Docker.
-docker compose -f docker-compose-beats.yml -p beats up -d
-```
+docker compose -f docker-compose-beats.yml -p beats up
+``` 
+>Note que a opção <beats> referesse ao nome do projeto de sua escolha.
 
 ## 5. Resultado do projeto
 >Duas pilhas uma executando o ELK e outras executando os Betas!
 
 <p align="center">
     <img width="600" height="375" src="img/docker.png">
-</p>
-
-<p align="center">
-    <img width="500" height="313" src="img/6pc2rx.gif">
 </p>
