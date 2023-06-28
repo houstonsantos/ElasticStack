@@ -7,7 +7,7 @@ services:
          author: "Houston Santos - houston_santos@hotmail.com" 
       container_name: certs
       healthcheck:
-         test: [ "CMD-SHELL", "[ -f config/certs/elasticsearch/elasticsearch.crt ]" ]
+         test: [ "cmd-shell", "[ -f config/certs/elasticsearch/elasticsearch.crt ]" ]
          interval: 1s
          timeout: 5s
          retries: 120
